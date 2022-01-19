@@ -106,8 +106,43 @@ function viewRoles(){
         additionalPrompt();
     });
 };
+// NEEDS departments and MANAGERS
+function viewEmployees() {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.job_title, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id`, (err, row) =>{
+        if (err) {
+            console.log(err);
+        }
+        console.table(row);
+        additionalPrompt();
+    });
+};
+
+// TESTING - REMOVE LATER
+// `SELECT employee.id, employee.first_name, employee.last_name, role.job_title, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id`
+
+
+
+// NOt Finished
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newDepartment',
+            message: 'Please add a new department.'
+        }
+    ])
+.then(function(answer) {
+    console.log(answer);
+})
+};
 
 
 
 
+// .then(function(answer) {
 
+      
+//     connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.eeFirstName, answer.eeLastName, answer.roleID, answer.managerID], function(err, res) {
+//       if (err) throw err;
+//       console.table(res);
+//       startScreen();
