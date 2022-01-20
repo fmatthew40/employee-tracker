@@ -132,8 +132,13 @@ function addDepartment() {
         }
     ])
 .then(function(answer) {
-    console.log(answer);
-})
+    db.query("INSERT INTO department (department_name) VALUES (?)", [answer.newDepartment], function(err, row) {
+        if (err) throw err;
+        // console.table('Your new department was successfully added to the database!');
+        viewDepartments();
+        // additionalPrompt();
+      });
+    });
 };
 
 
