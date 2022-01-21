@@ -192,3 +192,24 @@ function addEmployee () {
         });
     });
 };
+
+function updateEmployee () {
+    inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'updateEmpl',
+            message: "Please enter the id number of the employee that you would like to update." 
+        },
+        {
+            type: 'input',
+            name: 'updateRole',
+            message: "Please enter the id number of the new role that you would like to assign to this employee."
+        }
+    ])
+.then(function(answer) {
+    db.query("Update employee SET role_id = ? WHERE id = ?", [answer.updateRole, answer.updateEmpl], function(err, row) {
+        if (err) throw err;
+            viewEmployees();
+        });
+    });
+};
