@@ -1,9 +1,7 @@
 var inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-// const express = require('express');
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+
 const db = require('./db/connection.js');
 
 function promptUser () {
@@ -122,7 +120,6 @@ function viewEmployees() {
 
 
 
-// NOt Finished
 function addDepartment() {
     inquirer.prompt([
         {
@@ -134,20 +131,64 @@ function addDepartment() {
 .then(function(answer) {
     db.query("INSERT INTO department (department_name) VALUES (?)", [answer.newDepartment], function(err, row) {
         if (err) throw err;
-        // console.table('Your new department was successfully added to the database!');
         viewDepartments();
-        // additionalPrompt();
       });
     });
 };
 
+function addRole () {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newName',
+            message: 'Please enter the name of the new role that you wish to add'
+        },
+        {
+            type: 'input',
+            name: 'newSalary',
+            message: 'Please enter the salary for this role.'
+        },
+        {
+            type: 'input', 
+            name: 'newDepartment',
+            message: 'Please enter the id number of the department that you would like to assign this role to.'
+        }
+    ])
+.then(function(answer) {
+    db.query("INSERT INTO role (job_title, salary, department_id) VALUES (?, ?, ?)", [answer.newName, answer.newSalary, answer.newDepartment], function(err, row) {
+        if (err) throw err;
+            viewRoles();
+        });
+    });
+};
 
-
-
-// .then(function(answer) {
-
-      
-//     connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.eeFirstName, answer.eeLastName, answer.roleID, answer.managerID], function(err, res) {
-//       if (err) throw err;
-//       console.table(res);
-//       startScreen();
+function addEmployee () {
+    inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'newFirst',
+            message: "Please enter the first name of the employee." 
+        },
+        {
+            type: 'input',
+            name: 'newLast',
+            message: "Please enter the last name of the employee."
+        },
+        {
+            type: 'input',
+            name: 'newTitle',
+            message: "Please enter the id number for the role you are assigning this employee to."
+        },
+        {
+            type: 'input',
+            name: 'newManager',
+            message: "Please enter the id number of the manager that this employee will be assigned to."
+        }
+    ])
+.then(function(answer) {
+    db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.newFirst, answer.newLast, answer.newTitle, answer.newManager], function(err, row) {
+        if (err) throw err;
+            viewEmployees();
+        });
+    });
+};
