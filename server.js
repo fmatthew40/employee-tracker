@@ -10,7 +10,7 @@ inquirer.prompt([
         type: 'list',
         name: 'choiceSelect',
         message: 'Welcome!  What would you like to do?',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+        choices: ['View all departments', 'View all roles', 'View all employees', 'View employee by manager', 'View employee by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
     }
 ])
 .then(answers => {
@@ -36,6 +36,12 @@ inquirer.prompt([
         case 'Update an employee role':
             updateEmployee();
             break; 
+        case 'View employee by manager':
+            viewByManager();
+            break; 
+        case 'View employee by department':
+            viewByDepartment();
+            break; 
    }
 })
 };
@@ -47,7 +53,7 @@ function additionalPrompt () {
             type: 'list',
             name: 'choicesSelect',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'End Session']
+            choices: ['View all departments', 'View all roles', 'View all employees','View employee by manager', 'View employee by department', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'End Session']
         }
     ])
     .then(answers => {
@@ -75,6 +81,12 @@ function additionalPrompt () {
                 break; 
             case 'End Session':
                 end();
+                break; 
+            case 'View employee by manager':
+                viewByManager();
+                break; 
+            case 'View employee by department':
+                viewByDepartment();
                 break; 
        }
     })
@@ -104,9 +116,9 @@ function viewRoles(){
         additionalPrompt();
     });
 };
-// NEEDS departments and MANAGERS
+
 function viewEmployees() {
-    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.job_title, department.department_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id)
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.job_title, department.department_name, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id
     `, (err, row) =>{
         if (err) {
             console.log(err);
@@ -209,3 +221,29 @@ function updateEmployee () {
         });
     });
 };
+
+// Bonus - View Employees By Manager
+function viewByManager() {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id
+    `, (err, row) =>{
+        if (err) {
+            console.log(err);
+        }
+        console.table(row);
+        additionalPrompt();
+    });
+};
+
+// Bonus - View Employees By Department
+function viewByDepartment() {
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, department.department_name FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id
+    `, (err, row) =>{
+        if (err) {
+            console.log(err);
+        }
+        console.table(row);
+        additionalPrompt();
+    });
+};
+
+
