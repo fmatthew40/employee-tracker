@@ -106,7 +106,8 @@ function viewRoles(){
 };
 // NEEDS departments and MANAGERS
 function viewEmployees() {
-    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.job_title, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id`, (err, row) =>{
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, role.job_title, department.department_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id)
+    `, (err, row) =>{
         if (err) {
             console.log(err);
         }
@@ -114,11 +115,6 @@ function viewEmployees() {
         additionalPrompt();
     });
 };
-
-// TESTING - REMOVE LATER
-// `SELECT employee.id, employee.first_name, employee.last_name, role.job_title, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id`
-
-
 
 function addDepartment() {
     inquirer.prompt([
