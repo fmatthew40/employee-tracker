@@ -26,7 +26,7 @@
  If you are interested in trying this application out, you can install MySQL, Inquirer, and console.table.  You will need to run the db file, schema file and the seeds file.  
 
  ## Usage 
- The project's intended use is to use the terminal to run an employee tracker that holds data.  
+ The project's intended use is to use the terminal to run an employee tracker that holds data. This project will display employee data.   
 
  ## Contributing 
  Contributions are not being accepted at this time. 
